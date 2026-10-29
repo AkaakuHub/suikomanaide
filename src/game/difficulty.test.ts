@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
 import { Simulation } from "./simulation";
 import { lightYearsPerUnit } from "./flight";
+import { Population } from "./population";
+import { createFlight } from "./model";
 
 function upcoming(distance: number) {
   const game = new Simulation(() => 0.5);
@@ -29,4 +31,29 @@ describe("後半の難易度", () => {
     );
     expect(late.some((entity) => ["shield", "magnet", "ring"].includes(entity.kind))).toBe(false);
   });
+});
+
+it("急流の分岐では通常水路より機雷と排水口が多く配置される", () => {
+  function threats(rapid: boolean) {
+    const state = createFlight();
+    const population = new Population(() => 0.5);
+    population.start(state);
+    state.travel = 700;
+    population.populate(state);
+    if (!rapid) state.forks.splice(0, 1);
+    state.entities = [];
+    state.travel = 1800;
+    population.populate(state);
+    return state.entities.filter((entity) => {
+      const station = state.travel - entity.z;
+      return station >= 1100 && station < 1800;
+    });
+  }
+  const rapid = threats(true);
+  const normal = threats(false);
+  for (const kind of ["hazard", "portal"]) {
+    expect(rapid.filter((entity) => entity.kind === kind).length).toBeGreaterThan(
+      normal.filter((entity) => entity.kind === kind).length * 1.4,
+    );
+  }
 });

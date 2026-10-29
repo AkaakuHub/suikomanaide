@@ -1,3 +1,4 @@
+import { portalScale } from "../game/collision";
 import * as THREE from "three";
 import { portalColors } from "../game/model";
 import type { Entity } from "../game/model";
@@ -5,6 +6,7 @@ import type { Entity } from "../game/model";
 export function createPortal(entity: Entity) {
   const color = new THREE.Color(portalColors[entity.color]);
   const group = new THREE.Group();
+  group.scale.setScalar(portalScale);
   const field = new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,

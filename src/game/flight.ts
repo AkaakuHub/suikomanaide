@@ -5,7 +5,7 @@ export const lightYearsPerUnit = 1;
 export function flightSpeed(speed: number, energy: number, dt: number) {
   const reserve = clamp(energy / cruiseEnergy, 0, 1);
   const depleted = 1 - clamp(energy / 35, 0, 1);
-  const drag = 0.006 + 0.114 * (1 - reserve) ** 2 + 0.8 * depleted ** 2;
+  const drag = 0.006 + 0.114 * (1 - reserve) ** 2 + 0.14 * depleted ** 2;
   return 9 + (speed - 9) * Math.exp(-drag * dt);
 }
 export function steeringSpeed(speed: number) {

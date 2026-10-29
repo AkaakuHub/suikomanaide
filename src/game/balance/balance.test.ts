@@ -14,8 +14,8 @@ beforeAll(() => {
   expert = sampleRuns(pilots.expert);
   console.info(JSON.stringify({ beginner, normal, practiced, expert }));
 }, 30000);
-it("回収と回避が遅れる条件では20〜40秒で終わる", () => {
-  expect(beginner.medianTime).toBeGreaterThan(20);
+it("回収と回避が遅れる条件では15〜40秒で終わる", () => {
+  expect(beginner.medianTime).toBeGreaterThan(15);
   expect(beginner.medianTime).toBeLessThan(40);
   expect(beginner.finished).toBe(100);
 });

@@ -52,7 +52,11 @@ export class Population {
         }
       : undefined;
     const angle = this.random() * Math.PI * 2;
-    const inset = flightDifficulty((s.travel - z) * lightYearsPerUnit).portalInset;
+    const inset = flightDifficulty(
+      (s.travel - z) * lightYearsPerUnit,
+      null,
+      fork !== undefined,
+    ).portalInset;
     const radius =
       kind === "portal" ? inset + this.random() * (0.94 - inset) : Math.sqrt(this.random()) * 0.85;
     const point = placeOutsideLane(kind, s.travel - z, {
@@ -106,7 +110,11 @@ export class Population {
     this.ringRoute = this.ringRoute.filter((ring) => ring.station > s.travel - 1200);
     while (this.nextHazard <= horizon) {
       const distance = this.nextHazard * lightYearsPerUnit;
-      const difficulty = flightDifficulty(distance, this.zones.at(distance)?.kind);
+      const difficulty = flightDifficulty(
+        distance,
+        this.zones.at(distance)?.kind,
+        forkAt(s.forks, distance / lightYearsPerUnit) !== undefined,
+      );
       const z = s.travel - this.nextHazard;
       const hazard = this.spawn(s, "hazard", undefined, undefined, z);
       if (this.random() < difficulty.pairedHazardChance)
@@ -115,14 +123,22 @@ export class Population {
     }
     while (this.nextPortal <= horizon) {
       const distance = this.nextPortal * lightYearsPerUnit;
-      const difficulty = flightDifficulty(distance, this.zones.at(distance)?.kind);
+      const difficulty = flightDifficulty(
+        distance,
+        this.zones.at(distance)?.kind,
+        forkAt(s.forks, distance / lightYearsPerUnit) !== undefined,
+      );
       if (this.zones.allowsPortal(distance))
         this.spawn(s, "portal", undefined, undefined, s.travel - this.nextPortal);
       this.nextPortal += difficulty.portalSpacing * (0.85 + this.random() * 0.3);
     }
     while (this.nextItem <= horizon) {
       const distance = this.nextItem * lightYearsPerUnit;
-      const difficulty = flightDifficulty(distance, this.zones.at(distance)?.kind);
+      const difficulty = flightDifficulty(
+        distance,
+        this.zones.at(distance)?.kind,
+        forkAt(s.forks, distance / lightYearsPerUnit) !== undefined,
+      );
       if (distance >= 5000 || this.random() < difficulty.reverseChance) {
         const kind = distance >= 1200 && this.random() < 0.3 ? "confusion" : "reverse";
         const ambush =

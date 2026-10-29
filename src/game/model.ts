@@ -125,7 +125,8 @@ export function gravityForce(entity: Entity, flight: Pick<Flight, "x" | "y" | "s
     entity.z >= 0 ? 0 : Math.max(0, 1 + entity.z / (52 + weakness * (maxGravityReach - 52)));
   const resistance = clamp((maxFlightSpeed - flight.speed) / (maxFlightSpeed - 9), 0.1, 1);
   const strength =
-    (proximity ** 2 * resistance ** 2 * 72 * (1 + weakness * 4.5)) / (1 + lateral * 0.3);
+    (proximity ** 2 * resistance ** 2 * 84 * (1 + weakness * 4.5) * (entity.branch ? 1.25 : 1)) /
+    (1 + lateral * 0.3);
   return {
     x: (dx / Math.max(0.8, lateral)) * strength,
     y: (dy / Math.max(0.8, lateral)) * strength,

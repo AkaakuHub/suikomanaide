@@ -28,6 +28,13 @@ describe("ワームホールの重力", () => {
   });
 });
 describe("飛行ルール", () => {
+  it("大きくなった排水口は端に浮き輪が触れても吸い込む", () => {
+    const game = new Simulation(() => 0.5);
+    game.start();
+    game.state.entities = [{ ...portal, x: 2.2, y: 0, z: -0.1 }];
+    game.tick(1 / 60, { x: 0, y: 0 });
+    expect(game.state.phase).toBe("arrived");
+  });
   it("リングで回復し加速、電気球で減速する", () => {
     const game = new Simulation(() => 0.5);
     game.start();

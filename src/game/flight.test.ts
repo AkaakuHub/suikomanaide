@@ -2,9 +2,11 @@ import { describe, expect, it } from "vite-plus/test";
 import { flightSpeed, steeringSpeed } from "./flight";
 
 describe("速度と操舵の減衰", () => {
-  it("エネルギー切れでは2秒以内に十分減速し、前進は続く", () => {
-    expect(flightSpeed(65, 0, 2)).toBeGreaterThan(9);
-    expect(flightSpeed(65, 0, 2)).toBeLessThan(20);
+  it("エネルギー切れでも瞬間的に失速せず数秒かけて減速する", () => {
+    expect(flightSpeed(65, 0, 1)).toBeGreaterThan(50);
+    expect(flightSpeed(65, 0, 1)).toBeLessThan(60);
+    expect(flightSpeed(65, 0, 6)).toBeGreaterThan(18);
+    expect(flightSpeed(65, 0, 6)).toBeLessThan(30);
   });
   it("十分な蓄積があれば高速を維持し、残量低下に伴い減速が早まる", () => {
     expect(flightSpeed(65, 200, 10)).toBeGreaterThan(60);
