@@ -82,10 +82,7 @@ async function arrive() {
   }
 }
 async function dispatch(action: Action) {
-  if (action === "portal") {
-    audio.release();
-    location.assign("/");
-  } else if (action === "start") start();
+  if (action === "start") start();
   else if (action === "pause" || action === "resume") togglePause();
   else if (action === "sound") {
     try {
@@ -163,3 +160,14 @@ for (const event of ["touchstart", "touchend"])
   window.addEventListener(event, () => restoreAudio(true), { capture: true, passive: true });
 restoreAudio();
 requestAnimationFrame(frame);
+
+let resumeAfterPortal = false;
+document.addEventListener("portal-menu-open", () => {
+  resumeAfterPortal = game.state.phase === "flying";
+  if (resumeAfterPortal) setPhase("paused");
+});
+document.addEventListener("portal-menu-close", () => {
+  if (resumeAfterPortal && game.state.phase === "paused") setPhase("flying");
+  resumeAfterPortal = false;
+});
+document.dispatchEvent(new Event("portal-menu-ready"));

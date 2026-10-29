@@ -109,18 +109,6 @@ export class GameUI {
         this.ctx.fillRect(0, 0, w, h);
       }
     }
-    if (!this.error)
-      p.button(
-        "portal",
-        "ゲーム一覧",
-        this.inset.left + 12,
-        this.inset.top + 12,
-        48,
-        48,
-        false,
-        false,
-        true,
-      );
     if (!this.error && state.phase !== "paused") {
       const top = this.inset.top + 12;
       let right = w - this.inset.right - 60;

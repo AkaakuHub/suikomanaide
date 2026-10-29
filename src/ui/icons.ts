@@ -1,4 +1,4 @@
-import { createElement, Play, Pause, Volume2, VolumeX, Share2, LayoutGrid } from "lucide";
+import { createElement, Play, Pause, Volume2, VolumeX, Share2 } from "lucide";
 import type { IconNode } from "lucide";
 import type { Action } from "./paint";
 
@@ -8,7 +8,6 @@ const nodes: Record<Action, IconNode> = {
   resume: Play,
   sound: Volume2,
   share: Share2,
-  portal: LayoutGrid,
 };
 const cache = new Map<string, HTMLImageElement>();
 export function buttonIcon(action: Action, label: string, color: string) {
