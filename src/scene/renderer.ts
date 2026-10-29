@@ -166,7 +166,7 @@ export class FlightRenderer {
     this.ship.quaternion.setFromRotationMatrix(orientation(frame));
     this.ship.rotateZ(-state.vx * 0.045 + Math.sin(this.time * 19) * pull * 0.045);
     this.ship.rotateX(state.vy * 0.025 + Math.sin(this.time * 23) * pull * 0.02);
-    this.attraction.update(state, this.ship.position, this.time);
+    this.attraction.update(state, this.ship.position, this.time, this.meshes);
     const kick = Math.sin(this.time * (4 + state.speed * 0.06));
     for (const part of this.ship.children) {
       if (part.name === "left-fin" || part.name === "right-fin") {

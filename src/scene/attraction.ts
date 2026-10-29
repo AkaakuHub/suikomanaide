@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { courseFrame } from "../game/course";
+import { channelAccessible } from "../game/routes";
 import { gravityForce, portalColors } from "../game/model";
 import type { Flight } from "../game/model";
 
@@ -19,7 +19,12 @@ export class Attraction {
     this.mesh = new THREE.LineSegments(this.geometry, this.material);
     this.mesh.frustumCulled = false;
   }
-  update(state: Flight, start: THREE.Vector3, time: number) {
+  update(
+    state: Flight,
+    start: THREE.Vector3,
+    time: number,
+    meshes: ReadonlyMap<number, THREE.Object3D>,
+  ) {
     if (state.confusion > 0) {
       this.mesh.visible = false;
       return;
@@ -27,7 +32,12 @@ export class Attraction {
     let target = null;
     let strength = 0;
     for (const entity of state.entities) {
-      if (entity.kind !== "portal" || entity.z > 0) continue;
+      if (
+        entity.kind !== "portal" ||
+        entity.z >= 0 ||
+        !channelAccessible(state.forks, state.travel, entity.branch)
+      )
+        continue;
       const force = gravityForce(entity, state);
       if (force.strength > strength) {
         strength = force.strength;
@@ -36,22 +46,21 @@ export class Attraction {
     }
     this.mesh.visible = strength > 3 && target !== null;
     if (!target || strength <= 3) return;
-    const frame = courseFrame(state.travel - target.z);
-    const end = new THREE.Vector3(
-      frame.center.x + frame.right.x * target.x + frame.up.x * target.y,
-      frame.center.y + frame.right.y * target.x + frame.up.y * target.y,
-      frame.center.z + frame.right.z * target.x + frame.up.z * target.y,
-    );
-    const right = new THREE.Vector3(frame.right.x, frame.right.y, frame.right.z);
-    const up = new THREE.Vector3(frame.up.x, frame.up.y, frame.up.z);
+    const targetMesh = meshes.get(target.id);
+    if (!targetMesh) {
+      this.mesh.visible = false;
+      return;
+    }
+    const end = targetMesh.position;
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(targetMesh.quaternion);
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(targetMesh.quaternion);
     let index = 0;
     const point = new THREE.Vector3();
     for (let arm = 0; arm < 6; arm++) {
       for (let i = 0; i < 16; i++) {
-        const from = (i / 16 + time * 0.4) % 1;
-        for (const t of [from, Math.min(1, from + 0.022)]) {
+        for (const t of [i / 16, i === 15 ? 1 : (i + 0.38) / 16]) {
           const angle = (arm / 6) * Math.PI * 2 + t * 8 - time * 3;
-          const radius = (0.2 + Math.sin(t * Math.PI) * 0.7) * (1 - t);
+          const radius = t === 1 ? 0 : Math.sin(t * Math.PI) * 0.9;
           point
             .copy(start)
             .lerp(end, t)
