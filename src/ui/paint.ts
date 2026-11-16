@@ -1,6 +1,6 @@
 import { buttonIcon } from "./icons";
 
-export type Action = "start" | "pause" | "resume" | "sound" | "share";
+export type Action = "start" | "pause" | "resume" | "sound" | "share" | "portal";
 export interface ButtonRegion {
   action: Action;
   label: string;

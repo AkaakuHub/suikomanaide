@@ -11,7 +11,8 @@ export function resultScreen(p: Paint, result: FlightResult, imageReady: boolean
   p.text("m", cx, top + 122, 16, "#b9bfdc");
   const width = Math.min(280, wide ? p.width * 0.38 : p.width - 64);
   const x = wide ? p.width * 0.73 - width / 2 : (p.width - width) / 2;
-  const y = wide ? (p.height - 110) / 2 : top + 180;
+  const y = wide ? (p.height - 166) / 2 : top + 180;
   p.button("share", "共有", x, y, width, 48, true, !imageReady);
   p.button("start", "もう一度泳ぐ", x, y + 62, width);
+  p.button("portal", "ゲーム一覧へ戻る", x, y + 120, width);
 }

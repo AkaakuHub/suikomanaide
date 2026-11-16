@@ -88,7 +88,8 @@ export class GameUI {
     } else if (state.phase === "paused") {
       this.ctx.fillStyle = "#06102066";
       this.ctx.fillRect(0, 0, w, h);
-      p.button("resume", "再開", (w - 144) / 2, (h - 56) / 2, 144, 56, true);
+      p.button("resume", "再開", (w - 200) / 2, (h - 120) / 2, 200, 56, true);
+      p.button("portal", "ゲーム一覧へ戻る", (w - 200) / 2, (h - 120) / 2 + 70, 200);
     } else if (state.phase === "arrived" && this.result)
       resultScreen(p, this.result, this.imageReady);
     else if (state.phase === "flying") {
